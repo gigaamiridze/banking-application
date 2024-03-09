@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountMapper {
 
-    public Account mapToEntity(AccountDto accountDto) {
+    public static Account mapToEntity(AccountDto accountDto) {
         return Account.builder()
                 .id(accountDto.getId())
                 .accountHolderName(accountDto.getAccountHolderName())
@@ -15,7 +15,7 @@ public class AccountMapper {
                 .build();
     }
 
-    public AccountDto mapToDto(Account account) {
+    public static AccountDto mapToDto(Account account) {
         return AccountDto.builder()
                 .id(account.getId())
                 .accountHolderName(account.getAccountHolderName())
