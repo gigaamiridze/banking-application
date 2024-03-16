@@ -27,4 +27,9 @@ public class AccountControllerImpl implements AccountController {
     public ResponseEntity<BankingResponse> getAccountById(long accountId) {
         return accountService.getAccountById(accountId);
     }
+
+    @Override
+    public ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize) {
+        return accountService.getAccounts(pageNumber, pageSize);
+    }
 }

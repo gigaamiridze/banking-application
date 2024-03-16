@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/api/v1/bank/account")
 public interface AccountController {
@@ -17,4 +18,10 @@ public interface AccountController {
 
     @GetMapping("/{accountId}")
     ResponseEntity<BankingResponse> getAccountById(@PathVariable long accountId);
+
+    @GetMapping
+    ResponseEntity<BankingResponse> getAccounts(
+            @RequestParam(value = "pageNumber", defaultValue = "", required = false) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "", required = false) int pageSize
+    );
 }

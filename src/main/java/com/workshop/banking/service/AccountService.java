@@ -9,4 +9,6 @@ public interface AccountService {
     ResponseEntity<BankingResponse> createAccount(AccountDto accountDto);
 
     ResponseEntity<BankingResponse> getAccountById(long accountId);
+
+    ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize);
 }

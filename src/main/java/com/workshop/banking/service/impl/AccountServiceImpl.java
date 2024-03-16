@@ -4,16 +4,22 @@ import com.workshop.banking.dto.AccountDto;
 import com.workshop.banking.entity.Account;
 import com.workshop.banking.mapper.AccountMapper;
 import com.workshop.banking.model.BankingResponse;
+import com.workshop.banking.model.PageableResponse;
 import com.workshop.banking.repository.AccountRepository;
 import com.workshop.banking.service.AccountService;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -62,6 +68,32 @@ public class AccountServiceImpl implements AccountService {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BankingResponse(true, "Internal server error", null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize) {
+        try {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Account> accounts = accountRepository.findAll(pageable);
+            List<Account> listOfAccount = accounts.getContent();
+            List<AccountDto> content = listOfAccount.stream().map(AccountMapper::mapToDto).collect(Collectors.toList());
+
+            PageableResponse<AccountDto> pageableResponse = new PageableResponse<>();
+            pageableResponse.setContent(content);
+            pageableResponse.setPageNumber(accounts.getNumber());
+            pageableResponse.setPageSize(accounts.getSize());
+            pageableResponse.setTotalPages(accounts.getTotalPages());
+            pageableResponse.setTotalElements(accounts.getTotalElements());
+            pageableResponse.setLast(accounts.isLast());
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new BankingResponse(true, "Accounts retrieved successfully", pageableResponse));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BankingResponse(false, "Internal server error", null));
         }
     }
 
