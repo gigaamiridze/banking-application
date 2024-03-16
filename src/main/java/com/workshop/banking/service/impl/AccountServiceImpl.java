@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -41,6 +43,25 @@ public class AccountServiceImpl implements AccountService {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new BankingResponse(false, "Internal server error", null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<BankingResponse> getAccountById(long accountId) {
+        try {
+            Optional<Account> account = accountRepository.findById(accountId);
+            if (!account.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new BankingResponse(false, "Account not found with ID: " + accountId, null));
+            }
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new BankingResponse(true, "Account retrieved successfully", AccountMapper.mapToDto(account.get())));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BankingResponse(true, "Internal server error", null));
         }
     }
 

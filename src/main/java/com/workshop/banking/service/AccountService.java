@@ -7,4 +7,6 @@ import org.springframework.http.ResponseEntity;
 public interface AccountService {
 
     ResponseEntity<BankingResponse> createAccount(AccountDto accountDto);
+
+    ResponseEntity<BankingResponse> getAccountById(long accountId);
 }

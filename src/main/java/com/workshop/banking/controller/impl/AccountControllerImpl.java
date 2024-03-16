@@ -22,4 +22,9 @@ public class AccountControllerImpl implements AccountController {
     public ResponseEntity<BankingResponse> createAccount(AccountDto accountDto) {
         return accountService.createAccount(accountDto);
     }
+
+    @Override
+    public ResponseEntity<BankingResponse> getAccountById(long accountId) {
+        return accountService.getAccountById(accountId);
+    }
 }
