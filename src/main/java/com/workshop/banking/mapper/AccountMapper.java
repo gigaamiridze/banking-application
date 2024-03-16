@@ -22,5 +22,4 @@ public class AccountMapper {
                 .balance(account.getBalance())
                 .build();
     }
-
 }
