@@ -15,4 +15,6 @@ public interface AccountService {
     ResponseEntity<BankingResponse> depositBalance(long accountId, double amount);
 
     ResponseEntity<BankingResponse> withdrawBalance(long accountId, double amount);
+
+    ResponseEntity<BankingResponse> deleteAccountById(long accountId);
 }

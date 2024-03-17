@@ -46,4 +46,9 @@ public class AccountControllerImpl implements AccountController {
         Double amount = request.get("amount");
         return accountService.withdrawBalance(accountId, amount);
     }
+
+    @Override
+    public ResponseEntity<BankingResponse> deleteAccountById(long accountId) {
+        return accountService.deleteAccountById(accountId);
+    }
 }

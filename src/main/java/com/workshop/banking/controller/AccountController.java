@@ -3,6 +3,7 @@ package com.workshop.banking.controller;
 import com.workshop.banking.dto.AccountDto;
 import com.workshop.banking.model.BankingResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,4 +34,7 @@ public interface AccountController {
 
     @PutMapping("/{accountId}/withdraw")
     ResponseEntity<BankingResponse> withdrawBalance(@PathVariable long accountId, @RequestBody Map<String, Double> request);
+
+    @DeleteMapping("/{accountId}")
+    ResponseEntity<BankingResponse> deleteAccountById(@PathVariable long accountId);
 }
