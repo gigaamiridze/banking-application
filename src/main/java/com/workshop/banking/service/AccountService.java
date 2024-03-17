@@ -11,4 +11,6 @@ public interface AccountService {
     ResponseEntity<BankingResponse> getAccountById(long accountId);
 
     ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize);
+
+    ResponseEntity<BankingResponse> deposit(long accountId, double amount);
 }

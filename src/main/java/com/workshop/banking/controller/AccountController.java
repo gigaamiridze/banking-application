@@ -6,9 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Map;
 
 @RequestMapping("/api/v1/bank/account")
 public interface AccountController {
@@ -24,4 +27,7 @@ public interface AccountController {
             @RequestParam(value = "pageNumber", defaultValue = "", required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "", required = false) int pageSize
     );
+
+    @PutMapping("/{accountId}/deposit")
+    ResponseEntity<BankingResponse> deposit(@PathVariable long accountId, @RequestBody Map<String, Double> request);
 }

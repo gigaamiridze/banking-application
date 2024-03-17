@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.naming.spi.ResolveResult;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
         } catch (Exception ex) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new BankingResponse(true, "Internal server error", null));
+                    .body(new BankingResponse(false, "Internal server error", null));
         }
     }
 
@@ -90,6 +91,33 @@ public class AccountServiceImpl implements AccountService {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new BankingResponse(true, "Accounts retrieved successfully", pageableResponse));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BankingResponse(false, "Internal server error", null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<BankingResponse> deposit(long accountId, double amount) {
+        try {
+            Optional<Account> accountOptional = accountRepository.findById(accountId);
+            if (!accountOptional.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new BankingResponse(false, "Account not found with ID: " + accountId, null));
+            }
+
+            Account account = accountOptional.get();
+            double balance = account.getBalance() + amount;
+            account.setBalance(balance);
+            Account savedAccount = accountRepository.save(account);
+            log.info("Account balance deposited successfully for {}. Current balance {}", savedAccount.getAccountHolderName(),
+                    savedAccount.getBalance());
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new BankingResponse(true, "Balance updated successfully", AccountMapper.mapToDto(savedAccount)));
         } catch (Exception ex) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)

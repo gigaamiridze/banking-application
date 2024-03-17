@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class AccountControllerImpl implements AccountController {
 
@@ -31,5 +33,11 @@ public class AccountControllerImpl implements AccountController {
     @Override
     public ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize) {
         return accountService.getAccounts(pageNumber, pageSize);
+    }
+
+    @Override
+    public ResponseEntity<BankingResponse> deposit(long accountId, Map<String, Double> request) {
+        Double amount = request.get("amount");
+        return accountService.deposit(accountId, amount);
     }
 }
