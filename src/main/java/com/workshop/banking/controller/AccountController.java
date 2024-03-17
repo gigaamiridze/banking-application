@@ -37,4 +37,7 @@ public interface AccountController {
 
     @DeleteMapping("/{accountId}")
     ResponseEntity<BankingResponse> deleteAccountById(@PathVariable long accountId);
+
+    @DeleteMapping("/delete-all")
+    ResponseEntity<BankingResponse> deleteAllAccount();
 }

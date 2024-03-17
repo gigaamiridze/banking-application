@@ -51,4 +51,9 @@ public class AccountControllerImpl implements AccountController {
     public ResponseEntity<BankingResponse> deleteAccountById(long accountId) {
         return accountService.deleteAccountById(accountId);
     }
+
+    @Override
+    public ResponseEntity<BankingResponse> deleteAllAccount() {
+        return accountService.deleteAllAccount();
+    }
 }

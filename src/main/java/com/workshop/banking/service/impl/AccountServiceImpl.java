@@ -9,7 +9,6 @@ import com.workshop.banking.repository.AccountRepository;
 import com.workshop.banking.service.AccountService;
 import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.naming.spi.ResolveResult;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -173,6 +171,27 @@ public class AccountServiceImpl implements AccountService {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(new BankingResponse(true, "Account deleted successfully", AccountMapper.mapToDto(accountOptional.get())));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BankingResponse(false, "Internal server error", null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<BankingResponse> deleteAllAccount() {
+        try {
+            List<Account> accounts = accountRepository.findAll();
+            if (accounts.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.NO_CONTENT)
+                        .body(new BankingResponse(true, "No accounts found to delete", null));
+            }
+
+            accountRepository.deleteAll();
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new BankingResponse(true, "All accounts deleted successfully", null));
         } catch (Exception ex) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
