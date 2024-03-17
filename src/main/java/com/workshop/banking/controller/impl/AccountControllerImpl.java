@@ -36,8 +36,14 @@ public class AccountControllerImpl implements AccountController {
     }
 
     @Override
-    public ResponseEntity<BankingResponse> deposit(long accountId, Map<String, Double> request) {
+    public ResponseEntity<BankingResponse> depositBalance(long accountId, Map<String, Double> request) {
         Double amount = request.get("amount");
-        return accountService.deposit(accountId, amount);
+        return accountService.depositBalance(accountId, amount);
+    }
+
+    @Override
+    public ResponseEntity<BankingResponse> withdrawBalance(long accountId, Map<String, Double> request) {
+        Double amount = request.get("amount");
+        return accountService.withdrawBalance(accountId, amount);
     }
 }

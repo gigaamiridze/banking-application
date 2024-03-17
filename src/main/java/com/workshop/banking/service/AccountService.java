@@ -12,5 +12,7 @@ public interface AccountService {
 
     ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize);
 
-    ResponseEntity<BankingResponse> deposit(long accountId, double amount);
+    ResponseEntity<BankingResponse> depositBalance(long accountId, double amount);
+
+    ResponseEntity<BankingResponse> withdrawBalance(long accountId, double amount);
 }

@@ -29,5 +29,8 @@ public interface AccountController {
     );
 
     @PutMapping("/{accountId}/deposit")
-    ResponseEntity<BankingResponse> deposit(@PathVariable long accountId, @RequestBody Map<String, Double> request);
+    ResponseEntity<BankingResponse> depositBalance(@PathVariable long accountId, @RequestBody Map<String, Double> request);
+
+    @PutMapping("/{accountId}/withdraw")
+    ResponseEntity<BankingResponse> withdrawBalance(@PathVariable long accountId, @RequestBody Map<String, Double> request);
 }

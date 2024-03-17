@@ -99,7 +99,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<BankingResponse> deposit(long accountId, double amount) {
+    public ResponseEntity<BankingResponse> depositBalance(long accountId, double amount) {
         try {
             Optional<Account> accountOptional = accountRepository.findById(accountId);
             if (!accountOptional.isPresent()) {
@@ -117,7 +117,40 @@ public class AccountServiceImpl implements AccountService {
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new BankingResponse(true, "Balance updated successfully", AccountMapper.mapToDto(savedAccount)));
+                    .body(new BankingResponse(true, "Balance deposited successfully", AccountMapper.mapToDto(savedAccount)));
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new BankingResponse(false, "Internal server error", null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<BankingResponse> withdrawBalance(long accountId, double amount) {
+        try {
+            Optional<Account> accountOptional = accountRepository.findById(accountId);
+            if (!accountOptional.isPresent()) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(new BankingResponse(false, "Account not found with ID: " + accountId, null));
+            }
+
+            Account account = accountOptional.get();
+            if (account.getBalance() < amount) {
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body(new BankingResponse(false, "Insufficient amount: " + account.getBalance(), null));
+            }
+
+            double totalBalance = account.getBalance() - amount;
+            account.setBalance(totalBalance);
+            Account savedAccount = accountRepository.save(account);
+            log.info("Account balance withdraw successfully for {}. Current balance {}", savedAccount.getAccountHolderName(),
+                    savedAccount.getBalance());
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new BankingResponse(true, "Balance withdraw successfully", AccountMapper.mapToDto(savedAccount)));
         } catch (Exception ex) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
