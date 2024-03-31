@@ -1,22 +1,21 @@
 package com.workshop.banking.service;
 
-import com.workshop.banking.dto.AccountDto;
-import com.workshop.banking.model.BankingResponse;
-import org.springframework.http.ResponseEntity;
+import com.workshop.banking.entity.Account;
+import com.workshop.banking.model.PageableResponse;
 
 public interface AccountService {
 
-    ResponseEntity<BankingResponse> createAccount(AccountDto accountDto);
+    Account createAccount(Account Account);
 
-    ResponseEntity<BankingResponse> getAccountById(long accountId);
+    Account getAccountById(long accountId);
 
-    ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize);
+    PageableResponse<Account> getAccounts(int pageNumber, int pageSize);
 
-    ResponseEntity<BankingResponse> depositBalance(long accountId, double amount);
+    Account depositBalance(long accountId, double amount);
 
-    ResponseEntity<BankingResponse> withdrawBalance(long accountId, double amount);
+    Account withdrawBalance(long accountId, double amount);
 
-    ResponseEntity<BankingResponse> deleteAccountById(long accountId);
+    void deleteAccountById(long accountId);
 
-    ResponseEntity<BankingResponse> deleteAllAccount();
+    void deleteAllAccount();
 }

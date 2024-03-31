@@ -2,24 +2,19 @@ package com.workshop.banking.mapper;
 
 import com.workshop.banking.dto.AccountDto;
 import com.workshop.banking.entity.Account;
-import org.springframework.stereotype.Service;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Service
-public class AccountMapper {
+@Mapper
+public abstract class AccountMapper {
 
-    public static Account mapToEntity(AccountDto accountDto) {
-        return Account.builder()
-                .id(accountDto.getId())
-                .accountHolderName(accountDto.getAccountHolderName())
-                .balance(accountDto.getBalance())
-                .build();
-    }
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "accountHolderName", source = "accountHolderName")
+    @Mapping(target = "balance", source = "balance")
+    public abstract Account mapToEntity(AccountDto accountDto);
 
-    public static AccountDto mapToDto(Account account) {
-        return AccountDto.builder()
-                .id(account.getId())
-                .accountHolderName(account.getAccountHolderName())
-                .balance(account.getBalance())
-                .build();
-    }
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "accountHolderName", source = "accountHolderName")
+    @Mapping(target = "balance", source = "balance")
+    public abstract AccountDto mapToDto(Account account);
 }

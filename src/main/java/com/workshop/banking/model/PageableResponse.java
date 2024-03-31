@@ -12,10 +12,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageableResponse<T> {
+
     private List<T> content;
+
     private int pageNumber;
+
     private int pageSize;
+
     private int totalPages;
+
     private long totalElements;
+
+    private boolean isFirst;
+
     private boolean isLast;
+
+    private boolean isEmpty;
 }

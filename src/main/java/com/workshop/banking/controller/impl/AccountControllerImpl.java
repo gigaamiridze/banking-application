@@ -2,9 +2,12 @@ package com.workshop.banking.controller.impl;
 
 import com.workshop.banking.controller.AccountController;
 import com.workshop.banking.dto.AccountDto;
-import com.workshop.banking.model.BankingResponse;
+import com.workshop.banking.entity.Account;
+import com.workshop.banking.mapper.AccountMapper;
+import com.workshop.banking.model.PageableResponse;
 import com.workshop.banking.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,47 +16,56 @@ import java.util.Map;
 @RestController
 public class AccountControllerImpl implements AccountController {
 
-    private final AccountService accountService;
+    @Autowired
+    private AccountService accountService;
 
     @Autowired
-    public AccountControllerImpl(AccountService accountService) {
-        this.accountService = accountService;
+    private AccountMapper accountMapper;
+
+    @Override
+    public ResponseEntity<AccountDto> createAccount(AccountDto accountDto) {
+        Account account = accountMapper.mapToEntity(accountDto);
+        Account accountResponse = accountService.createAccount(account);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(accountMapper.mapToDto(accountResponse));
     }
 
     @Override
-    public ResponseEntity<BankingResponse> createAccount(AccountDto accountDto) {
-        return accountService.createAccount(accountDto);
+    public ResponseEntity<AccountDto> getAccountById(long accountId) {
+        Account account = accountService.getAccountById(accountId);
+        return ResponseEntity.ok(accountMapper.mapToDto(account));
     }
 
     @Override
-    public ResponseEntity<BankingResponse> getAccountById(long accountId) {
-        return accountService.getAccountById(accountId);
+    public ResponseEntity<PageableResponse<Account>> getAccounts(int pageNumber, int pageSize) {
+        PageableResponse<Account> pageableResponse = accountService.getAccounts(pageNumber, pageSize);
+        return ResponseEntity.ok(pageableResponse);
     }
 
     @Override
-    public ResponseEntity<BankingResponse> getAccounts(int pageNumber, int pageSize) {
-        return accountService.getAccounts(pageNumber, pageSize);
-    }
-
-    @Override
-    public ResponseEntity<BankingResponse> depositBalance(long accountId, Map<String, Double> request) {
+    public ResponseEntity<AccountDto> depositBalance(long accountId, Map<String, Double> request) {
         Double amount = request.get("amount");
-        return accountService.depositBalance(accountId, amount);
+        Account account = accountService.depositBalance(accountId, amount);
+        return ResponseEntity.ok(accountMapper.mapToDto(account));
     }
 
     @Override
-    public ResponseEntity<BankingResponse> withdrawBalance(long accountId, Map<String, Double> request) {
+    public ResponseEntity<AccountDto> withdrawBalance(long accountId, Map<String, Double> request) {
         Double amount = request.get("amount");
-        return accountService.withdrawBalance(accountId, amount);
+        Account account = accountService.withdrawBalance(accountId, amount);
+        return ResponseEntity.ok(accountMapper.mapToDto(account));
     }
 
     @Override
-    public ResponseEntity<BankingResponse> deleteAccountById(long accountId) {
-        return accountService.deleteAccountById(accountId);
+    public ResponseEntity<Void> deleteAccountById(long accountId) {
+        accountService.deleteAccountById(accountId);
+        return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<BankingResponse> deleteAllAccount() {
-        return accountService.deleteAllAccount();
+    public ResponseEntity<Void> deleteAllAccount() {
+        accountService.deleteAllAccount();
+        return ResponseEntity.ok().build();
     }
 }
